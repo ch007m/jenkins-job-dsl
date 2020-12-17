@@ -1,5 +1,7 @@
 package dev.snowdrop;
 
+import hudson.maven.MavenModuleSet;
+import hudson.maven.MavenModuleSetBuild;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
@@ -18,30 +20,35 @@ public class MavenJobDSLTest {
 
     @Test
     public void useMavenDSLGroovyFileAsJob() throws Exception {
-        FreeStyleProject p = j.createFreeStyleProject();
-        p.scheduleBuild2(0).get(); // run a build to create a workspace
-        p.getSomeWorkspace().child("mavenProject/mavenJob.groovy").copyFrom(getClass().getResourceAsStream("/mavenJob.groovy"));
+        FreeStyleProject job = j.createFreeStyleProject();
 
+        // Setup the ExecuteDslScripts with the target = mavenJob.groovy
         ExecuteDslScripts e = new ExecuteDslScripts();
-        e.setTargets("mavenProject/mavenJob.groovy");
-        p.getBuildersList().add(e);
+        e.setTargets("mavenJob.groovy");
+        e.setUseScriptText(true);
+        job.getBuildersList().add(e);
 
-        // Assert if build succeeded, if the Script executed includes the echo message
-        FreeStyleBuild b = j.assertBuildStatusSuccess(p.scheduleBuild2(0).get());
-        b.keepLog();
+        // Copy to the workspace the groovy file to be used
+        j.getInstance().getWorkspaceFor(job).child("mavenJob.groovy").copyFrom(getClass().getResourceAsStream("/mavenJob.groovy"));
 
-        assertEquals(2, b.number);
-        assertEquals("#2",b.getDisplayName());
-        assertEquals("SUCCESS",b.getResult().toString());
+        // Execute the seed job to create the mavenJob
+        FreeStyleBuild b = job.scheduleBuild2(0).get();
+
+        assertEquals(1, b.number);
+        assertEquals("#1",b.getDisplayName());
+        if (b.getResult().toString() != "SUCCESS") {
+            ArrayList LogResult = (ArrayList) b.getLog(100);
+            LogResult.forEach((s) -> System.out.println(s));
+        }
 
         // Check if the FreeStyleProject build reported that it generated the job: say-hello-world
         ArrayList LogResult = (ArrayList) b.getLog(100);
         //LogResult.forEach((s) -> System.out.println(s));
-        assertTrue(b.getLog(100).stream().anyMatch(str -> str.contains("GeneratedJob{name='say-hello-world'}")));
+        assertTrue(b.getLog(100).stream().anyMatch(str -> str.contains("GeneratedJob{name='mvn-spring-boot-rest-http'")));
 
         // Get the FreeStyleProject containing the Job DSL steps to be executed - Say Hello World
-        FreeStyleProject freeStyleProjectGeneratedJob = (FreeStyleProject) j.jenkins.getItem("say-hello-world");
-        FreeStyleBuild b2 =  freeStyleProjectGeneratedJob.scheduleBuild2(0).get();
+        MavenModuleSet mavenJob = (hudson.maven.MavenModuleSet) j.jenkins.getItem("mvn-spring-boot-rest-http");
+        MavenModuleSetBuild b2 = mavenJob.scheduleBuild2(0).get();
 
         assertEquals(1, b2.number);
         assertEquals("#1",b2.getDisplayName());
