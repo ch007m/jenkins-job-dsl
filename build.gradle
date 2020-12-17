@@ -38,19 +38,19 @@ configurations {
 dependencies {
     compile "org.jenkins-ci.main:jenkins-core:${jenkinsCore}"
     compile "org.jenkins-ci.main:remoting:${jenkinsRemoting}"
-    //compile "org.jenkins-ci.plugins:job-dsl:${jenkinsJobDsl}"
     compile "org.jenkins-ci.plugins:groovy:${jenkinsGroovyPlugin}@jar"
     compile "javax.servlet:javax.servlet-api:3.1.0"
-    compile("org.jenkins-ci.plugins:job-dsl:1.77@jar")
     compile("org.jenkins-ci.plugins:job-dsl-core:1.77@jar")
 
     testCompile("org.jenkins-ci.main:jenkins-test-harness:${jenkinsTestHarness}")
     testCompile("org.jenkins-ci.main:jenkins-war:${jenkinsCore}")
 
+    testCompile("org.jenkins-ci.plugins:job-dsl:1.77")
+    testCompile("org.jenkins-ci.plugins:job-dsl:1.77@jar")
+
 
     // List of jar calculated from the plugins list using jenkins UI 2.271
-    testCompile 'com.coravy.hudson.plugins.github:github:1.32.0@jar'
-    testCompile 'io.jenkins.plugins:okhttp-api:3.14.9@jar'
+/*    testCompile 'io.jenkins.plugins:okhttp-api:3.14.9@jar'
     testCompile 'io.jenkins.plugins:snakeyaml-api:1.26.3@jar'
     testCompile 'org.6wind.jenkins:lockable-resources:2.10@jar'
     testCompile 'org.jenkins-ci.plugins.pipeline-stage-view:pipeline-rest-api:2.19@jar'
@@ -118,12 +118,14 @@ dependencies {
     testCompile 'org.jenkinsci.plugins:pipeline-model-api:1.7.2@jar'
     testCompile 'org.jenkinsci.plugins:pipeline-model-definition:1.7.2@jar'
     testCompile 'org.jenkinsci.plugins:pipeline-model-extensions:1.7.2@jar'
-    testCompile 'org.jenkinsci.plugins:pipeline-stage-tags-metadata:1.7.2@jar'
+    testCompile 'org.jenkinsci.plugins:pipeline-stage-tags-metadata:1.7.2@jar'*/
 
     // Plugins added post plugin list calculation and needed by the Junit test case
+    testCompile 'com.coravy.hudson.plugins.github:github:1.32.0@jar'
     testCompile 'org.jenkins-ci.plugins:structs:1.20@jar'
     testCompile 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
     testCompile 'org.jenkins-ci.main:maven-plugin:3.8@jar'
+    testCompile 'org.spockframework:spock-core:1.3-groovy-2.4'
 
     // Plugins list installed from the suggested plugins proposed when we configure a local jenkins instance
     testPlugins 'com.coravy.hudson.plugins.github:github:1.32.0'

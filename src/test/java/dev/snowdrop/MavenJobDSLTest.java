@@ -5,7 +5,7 @@ import hudson.maven.MavenModuleSetBuild;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
-import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
@@ -18,8 +18,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MavenJobDSLTest {
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+    @ClassRule
+    public static JenkinsRule j = new JenkinsRule();
 
     @Test
     public void useMavenDSLGroovyFileAsJob() throws Exception {
@@ -40,7 +40,7 @@ public class MavenJobDSLTest {
         assertEquals(1, b.number);
         assertEquals("#1",b.getDisplayName());
         if (b.getResult().toString() != "SUCCESS") {
-            ArrayList LogResult = (ArrayList) b.getLog(100);
+            ArrayList LogResult = (ArrayList) b.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         }
 
