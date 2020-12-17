@@ -3,6 +3,7 @@
 ### Prerequisite
 
 - Have gradle 6.7.1 installed and groovy 2.5.12
+- JDK 8 !!  
 - Run the following script in the Script Console of a Jenkins instance to generate
 the above testPlugins list.
 ```
