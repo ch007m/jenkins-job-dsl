@@ -88,6 +88,13 @@
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
+            <artifactId>maven-plugin</artifactId>
+            <version>${jenkins-maven-plugin.version}</version>
+            <scope>test</scope>
+            <classifier>jar</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.main</groupId>
             <artifactId>jenkins-test-harness</artifactId>
             <version>2.71</version>
             <scope>test</scope>
