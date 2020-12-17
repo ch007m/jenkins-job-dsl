@@ -344,6 +344,7 @@ dependencies {
     testPlugins 'org.jenkins-ci.plugins:script-security:1.75'
     testPlugins 'org.jenkins-ci.plugins:sse-gateway:1.21'
     testPlugins 'org.jenkins-ci.plugins:ssh-credentials:1.18.1'
+    testPlugins 'org.jenkins-ci.plugins:structs:1.20' // Added manuallygit
     testPlugins 'org.jenkins-ci.plugins:subversion:2.13.1'
     testPlugins 'org.jenkins-ci.plugins:token-macro:2.12'
     testPlugins 'org.jenkins-ci.plugins:trilead-api:1.0.5'
