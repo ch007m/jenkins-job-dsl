@@ -9,7 +9,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -22,14 +25,17 @@ public class MavenJobDSLTest {
     public void useMavenDSLGroovyFileAsJob() throws Exception {
         FreeStyleProject job = j.createFreeStyleProject();
 
-        // Setup the ExecuteDslScripts with the target = mavenJob.groovy
+        // Setup the ExecuteDslScripts to load the content of the DSL groovy script = mavenJob.groovy
         ExecuteDslScripts e = new ExecuteDslScripts();
-        e.setTargets("mavenJob.groovy");
+        //e.setTargets("mavenJob.groovy");
+        String dslScript = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/mavenJob.groovy")))
+                .lines().collect(Collectors.joining("\n"));
+        e.setScriptText(dslScript);
         e.setUseScriptText(true);
         job.getBuildersList().add(e);
 
         // Copy to the workspace the groovy file to be used
-        j.getInstance().getWorkspaceFor(job).child("mavenJob.groovy").copyFrom(getClass().getResourceAsStream("/mavenJob.groovy"));
+        //j.getInstance().getWorkspaceFor(job).child("mavenJob.groovy").copyFrom(getClass().getResourceAsStream("/mavenJob.groovy"));
 
         // Execute the seed job to create the mavenJob
         FreeStyleBuild b = job.scheduleBuild2(0).get();
