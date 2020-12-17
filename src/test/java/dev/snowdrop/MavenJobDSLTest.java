@@ -22,8 +22,37 @@ public class MavenJobDSLTest {
     public JenkinsRule j = new JenkinsRule();
 
     @Test
+    public void useSimpleDSLGroovyFileAsJob() throws Exception {
+        FreeStyleProject job = j.createFreeStyleProject("simple-seed-job");
+
+        // Setup the ExecuteDslScripts to load the content of the DSL groovy script = mavenJob.groovy
+        ExecuteDslScripts e = new ExecuteDslScripts();
+        //e.setTargets("mavenJob.groovy");
+        String dslScript = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/simpleJob.groovy")))
+                .lines().collect(Collectors.joining("\n"));
+        e.setScriptText(dslScript);
+        e.setUseScriptText(true);
+        job.getBuildersList().add(e);
+
+        // Execute the seed job to create the mavenJob
+        FreeStyleBuild b = job.scheduleBuild2(0).get();
+
+        assertEquals(1, b.number);
+        assertEquals("#1", b.getDisplayName());
+        if (b.getResult().toString() != "SUCCESS") {
+            ArrayList LogResult = (ArrayList) b.getLog(100);
+            LogResult.forEach((s) -> System.out.println(s));
+        }
+
+        // Check if the FreeStyleProject build reported that it generated the job: say-hello-world
+        ArrayList LogResult = (ArrayList) b.getLog(100);
+        //LogResult.forEach((s) -> System.out.println(s));
+        assertTrue(b.getLog(100).stream().anyMatch(str -> str.contains("GeneratedJob{name='hello-world'")));
+    }
+
+    @Test
     public void useMavenDSLGroovyFileAsJob() throws Exception {
-        FreeStyleProject job = j.createFreeStyleProject();
+        FreeStyleProject job = j.createFreeStyleProject("maven-seed-job");
 
         // Setup the ExecuteDslScripts to load the content of the DSL groovy script = mavenJob.groovy
         ExecuteDslScripts e = new ExecuteDslScripts();
@@ -33,9 +62,6 @@ public class MavenJobDSLTest {
         e.setScriptText(dslScript);
         e.setUseScriptText(true);
         job.getBuildersList().add(e);
-
-        // Copy to the workspace the groovy file to be used
-        //j.getInstance().getWorkspaceFor(job).child("mavenJob.groovy").copyFrom(getClass().getResourceAsStream("/mavenJob.groovy"));
 
         // Execute the seed job to create the mavenJob
         FreeStyleBuild b = job.scheduleBuild2(0).get();
@@ -52,7 +78,7 @@ public class MavenJobDSLTest {
         //LogResult.forEach((s) -> System.out.println(s));
         assertTrue(b.getLog(100).stream().anyMatch(str -> str.contains("GeneratedJob{name='mvn-spring-boot-rest-http'")));
 
-        // Get the FreeStyleProject containing the Job DSL steps to be executed - Say Hello World
+        // Get the FreeStyleProject containing the Job DSL steps to be executed - "mvn-spring-boot-rest-http"
         MavenModuleSet mavenJob = (hudson.maven.MavenModuleSet) j.jenkins.getItem("mvn-spring-boot-rest-http");
         MavenModuleSetBuild b2 = mavenJob.scheduleBuild2(0).get();
 
