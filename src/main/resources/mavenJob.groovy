@@ -1,5 +1,6 @@
 mavenJob('mvn-spring-boot-rest-http') {
     description 'A Maven Job compiling the project Spring Boot Rest HTTP Example'
+    mavenInstallation('apache-maven-3.0.1')
 
     parameters {
         gitParameter {

@@ -2,6 +2,17 @@ apply plugin: 'groovy'
 
 version = '1.0.0-SNAPSHOT'
 
+ext {
+    jenkinsCore=2.271
+    jenkinsJobDsl=1.77
+    jenkinsTestHarness=2.71
+
+    jenkinsGroovyPlugin=2.3
+    jenkinsRemoting=4.3
+
+    jenkinsTestSecurityScript=1.3
+}
+
 sourceSets {
     jobs {
         groovy {
@@ -43,6 +54,7 @@ dependencies {
     compile("org.jenkins-ci.plugins:job-dsl-core:1.77@jar")
 
     testCompile("org.jenkins-ci.main:jenkins-test-harness:${jenkinsTestHarness}")
+    testCompile("org.jenkins-ci.main:jenkins-test-harness-tools:2.2")
     testCompile("org.jenkins-ci.main:jenkins-war:${jenkinsCore}")
 
     testCompile("org.jenkins-ci.plugins:job-dsl:1.77")

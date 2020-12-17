@@ -1,5 +1,8 @@
 package dev.snowdrop;
 
+import hudson.tasks.Maven;
+import jenkins.model.Jenkins;
+import org.jvnet.hudson.test.*;
 import hudson.maven.MavenModuleSet;
 import hudson.maven.MavenModuleSetBuild;
 import hudson.model.FreeStyleBuild;
@@ -23,6 +26,11 @@ public class MavenJobDSLTest {
 
     @Test
     public void useMavenDSLGroovyFileAsJob() throws Exception {
+        // Add maven to the Jenkins Global Configuration Tools as it is needed by the mavenJob
+        Maven.MavenInstallation mvn = ToolInstallations.configureDefaultMaven("apache-maven-3.0.1", Maven.MavenInstallation.MAVEN_30);
+        Maven.MavenInstallation m3 = new Maven.MavenInstallation("apache-maven-3.0.1", mvn.getHome(), JenkinsRule.NO_PROPERTIES);
+        j.getInstance().getDescriptorByType(Maven.DescriptorImpl.class).setInstallations(m3);
+
         FreeStyleProject job = j.createFreeStyleProject("maven-seed-job");
 
         // Setup the ExecuteDslScripts to load the content of the DSL groovy script = mavenJob.groovy
