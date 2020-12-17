@@ -21,8 +21,8 @@
 
         <version.groovy>2.5.9</version.groovy>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -49,12 +49,14 @@
             <artifactId>git</artifactId>
             <version>${version.jenkins-git}</version>
         </dependency>
+
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>groovy</artifactId>
             <type>jar</type>
             <version>${version.jenkins-groovy}</version>
         </dependency>
+
         <dependency>
             <groupId>org.csanchez.jenkins.plugins</groupId>
             <artifactId>kubernetes</artifactId>
@@ -78,21 +80,17 @@
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>script-security</artifactId>
             <version>1.75</version>
+            <type>jar</type>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
             <artifactId>maven-plugin</artifactId>
             <version>${jenkins-maven-plugin.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>maven-plugin</artifactId>
-            <version>${jenkins-maven-plugin.version}</version>
-            <scope>test</scope>
-            <classifier>jar</classifier>
-        </dependency>
+
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
             <artifactId>jenkins-test-harness</artifactId>
