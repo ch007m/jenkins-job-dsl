@@ -81,17 +81,6 @@ dependencies {
     testCompile('org.jenkins-ci.main.maven:maven35-interceptor:1.13')
     testCompile('org.jenkins-ci.main.maven:maven3-interceptor-commons:1.13')
 
-    /*
-    testCompile("org.jenkins-ci.lib:lib-jenkins-maven-artifact-manager:1.2")
-
-    testCompile('org.jenkins-ci.main.maven:maven3-agent:1.13')
-
-    testCompile('org.jenkins-ci.main.maven:maven35-interceptor:1.13')
-    testCompile('org.apache.maven:maven-resolver-provider:3.5.4')
-    testCompile('org.apache.maven.resolver:maven-resolver-api:1.6.1')
-    testCompile('org.apache.maven.resolver:maven-resolver-impl:1.6.1') // jar packaging org.eclipse.aether.internal.impl.Default*
-    testCompile('org.apache.maven:maven-compat:3.5.4') // jar packaging org.apache.maven.repository.*
-     */
 
     // Dependencies added post  list calculation and needed for the Junit test case
     testCompile 'com.coravy.hudson.plugins.github:github:1.32.0@jar'
