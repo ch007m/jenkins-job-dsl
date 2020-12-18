@@ -62,6 +62,8 @@ dependencies {
     compile "javax.servlet:javax.servlet-api:3.1.0"
     compile("org.jenkins-ci.plugins:job-dsl-core:1.77@jar")
 
+    testCompile 'com.offbytwo.jenkins:jenkins-client:0.3.8'
+
     testCompile("org.jenkins-ci.main:jenkins-war:${jenkinsCore}")
     testCompile("org.jenkins-ci.main:jenkins-test-harness:${jenkinsTestHarness}")
     testCompile("org.jenkins-ci.main:jenkins-test-harness-tools:2.2")
@@ -73,10 +75,15 @@ dependencies {
 
     // The lib-jenkins-maven-embedder lib embeds all the needed maven deps for maven 3.5.4
     testCompile("org.jenkins-ci.lib:lib-jenkins-maven-embedder:3.15")
+    testCompile("org.jenkins-ci.lib:lib-jenkins-maven-artifact-manager:1.2")
     testCompile 'org.jenkins-ci.main:maven-plugin:3.8@jar'
     testCompile('org.jenkins-ci.main.maven:maven3-agent:1.13')
     testCompile('org.jenkins-ci.main.maven:maven35-agent:1.13')
     testCompile('org.jenkins-ci.main.maven:maven35-interceptor:1.13')
+    testCompile('org.apache.maven:maven-resolver-provider:3.5.4')
+    testCompile('org.apache.maven.resolver:maven-resolver-api:1.6.1')
+    testCompile('org.apache.maven.resolver:maven-resolver-impl:1.6.1') // jar packaging org.eclipse.aether.internal.impl.Default*
+    testCompile('org.apache.maven:maven-compat:3.5.4') // jar packaging org.apache.maven.repository.*
 
     // Dependencies added post  list calculation and needed for the Junit test case
     testCompile 'com.coravy.hudson.plugins.github:github:1.32.0@jar'
@@ -174,8 +181,8 @@ task resolveTestPlugins(type: Copy) {
 }
 
 test {
-    testLogging.showStandardStreams = true
-    testLogging.exceptionFormat = 'full'
+    //testLogging.showStandardStreams = true
+    //testLogging.exceptionFormat = 'full'
 
     dependsOn tasks.resolveTestPlugins
     inputs.files sourceSets.jobs.groovy.srcDirs
