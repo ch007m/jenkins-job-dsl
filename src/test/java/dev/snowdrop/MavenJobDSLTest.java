@@ -1,14 +1,13 @@
 package dev.snowdrop;
 
 import hudson.tasks.Maven;
-import jenkins.model.Jenkins;
+import org.junit.Rule;
 import org.jvnet.hudson.test.*;
 import hudson.maven.MavenModuleSet;
 import hudson.maven.MavenModuleSetBuild;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
@@ -21,8 +20,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MavenJobDSLTest {
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
 
     @Test
     public void useMavenDSLGroovyFileAsJob() throws Exception {
