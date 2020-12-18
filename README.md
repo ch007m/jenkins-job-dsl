@@ -21,6 +21,7 @@ Jenkins.instance.pluginManager.plugins
   .sort()
   .each { println it }
 ```
+**Remark**: TODO. Not all the `testCompile` deps are needed within the list populated. To be checked
 
 ### HowTo test
 
