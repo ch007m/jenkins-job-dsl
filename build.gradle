@@ -44,6 +44,7 @@ repositories {
 
 configurations {
     testPlugins {}
+    //all*.exclude group: 'org.apache.maven'
 }
 
 /*
@@ -69,12 +70,13 @@ dependencies {
     testCompile("org.jenkins-ci.plugins:job-dsl:1.77@jar")
     // Deps needed by maven job
     testCompile("org.antlr:antlr4-runtime:4.5")
-    testCompile("org.apache.maven:maven-artifact:3.6.3")
+
+    // The lib-jenkins-maven-embedder lib embeds all the needed maven deps for maven 3.5.4
     testCompile("org.jenkins-ci.lib:lib-jenkins-maven-embedder:3.15")
-    testCompile("org.jvnet.hudson:hudson-maven-embedder:3.2")
     testCompile 'org.jenkins-ci.main:maven-plugin:3.8@jar'
-    testCompile('org.apache.maven:maven-compat:3.5.4')
-    //testCompile 'org.jenkins-ci.main:maven-plugin:3.8'
+    testCompile('org.jenkins-ci.main.maven:maven3-agent:1.13')
+    testCompile('org.jenkins-ci.main.maven:maven35-agent:1.13')
+    testCompile('org.jenkins-ci.main.maven:maven35-interceptor:1.13')
 
     // Dependencies added post  list calculation and needed for the Junit test case
     testCompile 'com.coravy.hudson.plugins.github:github:1.32.0@jar'
