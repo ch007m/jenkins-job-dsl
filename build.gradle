@@ -32,6 +32,7 @@ repositories {
 
 configurations {
     testPlugins {}
+    testJenkinsJPI {}
 }
 
 dependencies {
@@ -53,7 +54,9 @@ dependencies {
     testCompile 'com.offbytwo.jenkins:jenkins-client:0.3.8'
 
     // To fix the sisu/guice error, we must unzip/import the jar of the maven-installation jpi locally
+    testJenkinsJPI('org.jenkins-ci.main:maven-plugin:3.8')
     testCompile fileTree(dir: 'target/maven-plugin/lib', include: ['*.jar'])
+    //testCompile fileTree(dir: '$buildDir/libs', include: ['*.jar'])
 
     // Dependencies added post list calculation and needed for the Junit test case using maven Job DSL
     testCompile("org.antlr:antlr4-runtime:4.5")
@@ -129,6 +132,28 @@ dependencies {
      */
 }
 
+task getJarfromMavenPluginHPI(type: Copy) {
+    from configurations.testJenkinsJPI
+    def mapping = [:]
+    include '*.jar'
+
+    configurations.testJenkinsJPI.resolvedConfiguration.resolvedArtifacts.each {
+        mapping[it.file.name] = "${it.name}.${it.extension}"
+    }
+    into "target/maven-plugin/lib"
+
+    /*
+        from(zipTree("src/resources/thirdPartyResources.zip")) {
+        include "libs/**"
+        eachFile { fcd ->
+            fcd.relativePath = new RelativePath(true, fcd.relativePath.segments.drop(1))
+        }
+        includeEmptyDirs = false
+    }
+    into "$buildDir/resources"
+    */
+}
+
 task resolveTestPlugins(type: Copy) {
     from configurations.testPlugins
     into new File(sourceSets.test.output.resourcesDir, 'test-dependencies')
@@ -151,8 +176,11 @@ task resolveTestPlugins(type: Copy) {
 
 test {
     testLogging.showStandardStreams = true
-    //testLogging.exceptionFormat = 'full'
+
+    println "Build dir : $buildDir"
 
     dependsOn tasks.resolveTestPlugins
+    dependsOn tasks.getJarfromMavenPluginHPI
+
     inputs.files sourceSets.jobs.groovy.srcDirs
 }
