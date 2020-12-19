@@ -44,16 +44,7 @@ repositories {
 
 configurations {
     testPlugins {}
-    //all*.exclude group: 'org.apache.maven'
 }
-
-/*
-configurations.all {
-    resolutionStrategy {
-        failOnVersionConflict()
-    }
-}
-*/
 
 dependencies {
     compile "org.jenkins-ci.main:jenkins-core:${jenkinsCore}"
@@ -62,22 +53,22 @@ dependencies {
     compile "javax.servlet:javax.servlet-api:3.1.0"
     compile("org.jenkins-ci.plugins:job-dsl-core:1.77@jar")
 
-    testCompile 'com.offbytwo.jenkins:jenkins-client:0.3.8'
-
     testCompile("org.jenkins-ci.main:jenkins-war:${jenkinsCore}")
     testCompile("org.jenkins-ci.main:jenkins-test-harness:${jenkinsTestHarness}")
     testCompile("org.jenkins-ci.main:jenkins-test-harness-tools:2.2")
 
+    // Jenkins Job DSL
     testCompile("org.jenkins-ci.plugins:job-dsl:1.77")
     testCompile("org.jenkins-ci.plugins:job-dsl:1.77@jar")
 
-    // Deps needed by maven job
-    testCompile("org.antlr:antlr4-runtime:4.5")
+    // Jar needed for the test case using the JenkinsServer Client: https://github.com/jenkinsci/java-client-api/blob/master/README.md
+    testCompile 'com.offbytwo.jenkins:jenkins-client:0.3.8'
 
     // To fix the sisu/guice error, we must unzip/import the jar of the maven-installation jpi locally
     testCompile fileTree(dir: 'target/maven-plugin/lib', include: ['*.jar'])
 
-    // Dependencies added post list calculation and needed for the Junit test case
+    // Dependencies added post list calculation and needed for the Junit test case using maven Job DSL
+    testCompile("org.antlr:antlr4-runtime:4.5")
     testCompile 'com.coravy.hudson.plugins.github:github:1.32.0@jar'
 
     testCompile 'org.jenkins-ci.plugins:structs:1.20@jar'
