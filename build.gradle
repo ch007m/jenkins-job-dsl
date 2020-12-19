@@ -24,18 +24,6 @@ sourceSets {
     }
 }
 
-//create a single Jar with all dependencies
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File',
-                'Implementation-Version': version,
-                'Main-Class': 'dev.snowdrop.FilePathHelper'
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
 repositories {
     maven {
         url 'https://repo.jenkins-ci.org/public/'
@@ -97,7 +85,9 @@ dependencies {
     testPlugins 'io.jenkins.plugins:plugin-util-api:1.6.0'
     testPlugins 'io.jenkins.plugins:popper-api:1.16.0-7'
     testPlugins 'io.jenkins.plugins:snakeyaml-api:1.27.0'
+
     testPlugins 'org.jenkins-ci.main:maven-plugin:3.8'
+
     testPlugins 'org.jenkins-ci.plugins.workflow:workflow-api:2.40'
     testPlugins 'org.jenkins-ci.plugins.workflow:workflow-scm-step:2.11'
     testPlugins 'org.jenkins-ci.plugins.workflow:workflow-step-api:2.23'
@@ -118,6 +108,7 @@ dependencies {
     testPlugins 'org.jenkins-ci.plugins:script-security:1.75'
     testPlugins 'org.jenkins-ci.plugins:ssh-credentials:1.18.1'
     testPlugins 'org.jenkins-ci.plugins:trilead-api:1.0.13'
+
     testPlugins 'org.jenkins-ci.tools:git-parameter:0.9.13'
 
     // Run the following script in the Script Console of your Jenkins instance to generate
