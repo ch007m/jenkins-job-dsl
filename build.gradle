@@ -70,23 +70,14 @@ dependencies {
 
     testCompile("org.jenkins-ci.plugins:job-dsl:1.77")
     testCompile("org.jenkins-ci.plugins:job-dsl:1.77@jar")
+
     // Deps needed by maven job
     testCompile("org.antlr:antlr4-runtime:4.5")
 
-    // The lib-jenkins-maven-embedder lib embeds all the needed maven deps for maven 3.5.4
-    //  testCompile("org.jenkins-ci.lib:lib-jenkins-maven-embedder:3.15")
-    testCompile("org.jenkins-ci.main:maven-plugin:3.8")
-    testCompile("org.jenkins-ci.main:maven-plugin:3.8@jar")
+    // To fix the sisu/guice error, we must unzip/import the jar of the maven-installation jpi locally
+    testCompile fileTree(dir: 'target/maven-plugin/lib', include: ['*.jar'])
 
-    //format for including lib jar files for all flavors
-    testCompile fileTree(dir: 'target/apache-maven-3.6.3/lib', include: ['*.jar'])
-
-    testCompile("org.jenkins-ci.main.maven:maven35-agent:1.13")
-    testCompile("org.codehaus.plexus:plexus-classworlds:2.6.0")
-    testCompile('org.jenkins-ci.main.maven:maven35-interceptor:1.13')
-    testCompile('org.jenkins-ci.main.maven:maven3-interceptor-commons:1.13')
-
-    // Dependencies added post  list calculation and needed for the Junit test case
+    // Dependencies added post list calculation and needed for the Junit test case
     testCompile 'com.coravy.hudson.plugins.github:github:1.32.0@jar'
 
     testCompile 'org.jenkins-ci.plugins:structs:1.20@jar'
@@ -98,6 +89,7 @@ dependencies {
     testCompile 'org.jenkins-ci.plugins:javadoc:1.6@jar'
     testCompile 'org.jenkins-ci.plugins:mailer:1.32.1@jar'
     testCompile 'org.jenkins-ci.plugins:junit:1.47@jar'
+    testCompile 'io.jenkins.plugins:echarts-api:4.9.0-2@jar'
 
     testCompile 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
     testCompile 'org.kohsuke:github-api:1.93'
@@ -136,12 +128,6 @@ dependencies {
     testPlugins 'org.jenkins-ci.plugins:ssh-credentials:1.18.1'
     testPlugins 'org.jenkins-ci.plugins:trilead-api:1.0.13'
     testPlugins 'org.jenkins-ci.tools:git-parameter:0.9.13'
-
-    // Plugins missing and not installed with list suggested when we configure a local jenkins instance
-    //testPlugins 'org.jenkins-ci.main:maven-plugin:3.8'
-    //testPlugins 'org.jenkins-ci.tools:git-parameter:0.9.13'
-
-    //testPlugins 'org.jenkins-ci.plugins:structs:1.20'
 
     // Run the following script in the Script Console of your Jenkins instance to generate
     // the above testPlugins list. (adapted from https://git.io/fjpUs)
