@@ -45,7 +45,7 @@ public class MavenJobDSLTest {
         FreeStyleBuild b = job.scheduleBuild2(0).get();
 
         assertEquals(1, b.number);
-        assertEquals("#1",b.getDisplayName());
+        assertEquals("#1", b.getDisplayName());
         if (b.getResult().toString() != "SUCCESS") {
             ArrayList LogResult = (ArrayList) b.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
@@ -61,7 +61,7 @@ public class MavenJobDSLTest {
         MavenModuleSetBuild b2 = mavenJob.scheduleBuild2(0).get();
 
         assertEquals(1, b2.number);
-        assertEquals("#1",b2.getDisplayName());
+        assertEquals("#1", b2.getDisplayName());
         if (b2.getResult().toString() != "SUCCESS") {
             LogResult = (ArrayList) b2.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
@@ -70,6 +70,5 @@ public class MavenJobDSLTest {
             LogResult = (ArrayList) b2.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         }
-        // TODO : Add code to fix : ERROR: A Maven installation needs to be available for this project to be built.Either your server has no Maven installations
     }
 }
