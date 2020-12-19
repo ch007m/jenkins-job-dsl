@@ -65,6 +65,10 @@ public class MavenJobDSLTest {
         if (b2.getResult().toString() != "SUCCESS") {
             LogResult = (ArrayList) b2.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
+        } else {
+            System.out.println("Job build succeeded !");
+            LogResult = (ArrayList) b2.getLog(200);
+            LogResult.forEach((s) -> System.out.println(s));
         }
         // TODO : Add code to fix : ERROR: A Maven installation needs to be available for this project to be built.Either your server has no Maven installations
     }
