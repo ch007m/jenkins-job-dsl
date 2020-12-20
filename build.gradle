@@ -136,25 +136,29 @@ dependencies {
 
 task extractJarFromPlugin(type: Copy) {
     def fileName = ""
-    def destFileName = ""
-    def String destinationDir = "$buildDir/tmp/"
+    def pluginDestinationFolder = ""
+    def buildTempDir = "$buildDir/tmp"
     from configurations.testJenkinsJPI
-    into new File(buildDir, 'tmp')
+    into new File(buildTempDir)
 
-    doFirst {
+    doFirst{
         configurations.testJenkinsJPI.resolvedConfiguration.resolvedArtifacts.each {
             fileName = it.file.name
-            destFileName = it.name
-            new File(destinationDir, '$fileName')
-            println "File : $fileName"
-
-            ant.unzip(src: "$destinationDir/$fileName", dest: "$destinationDir/$destFileName-extracted", overwrite: "true")
-            copy {
-                from new File("$destinationDir/$destFileName-extracted", 'WEB-INF/lib')
-                into "target/$destFileName"
-            }
+            pluginDestinationFolder = it.name
+            println "File name with extension: $fileName, Destination folder: $buildTempDir/$pluginDestinationFolder"
         }
     }
+
+    doLast {
+        ant.unzip(src: "$buildTempDir/$fileName", dest: "$buildTempDir/$pluginDestinationFolder-extracted", overwrite: "true")
+        copy {
+            from ("$buildTempDir/$pluginDestinationFolder-extracted/WEB-INF/lib")
+            include "**/*.jar"
+            into "target/$pluginDestinationFolder"
+        }
+    }
+
+
 }
 
 
