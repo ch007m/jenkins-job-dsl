@@ -3,14 +3,14 @@ apply plugin: 'groovy'
 version = '1.0.0-SNAPSHOT'
 
 ext {
-    jenkinsCore=2.271
-    jenkinsJobDsl=1.77
-    jenkinsTestHarness=2.71
+    jenkinsCore = 2.271
+    jenkinsJobDsl = 1.77
+    jenkinsTestHarness = 2.71
 
-    jenkinsGroovyPlugin=2.3
-    jenkinsRemoting=4.6
+    jenkinsGroovyPlugin = 2.3
+    jenkinsRemoting = 4.6
 
-    jenkinsTestSecurityScript=1.3
+    jenkinsTestSecurityScript = 1.3
 }
 
 sourceSets {
@@ -36,6 +36,9 @@ configurations {
 }
 
 dependencies {
+    compile group: 'ant', name: 'ant', version: '1.7.0'
+    compile group: 'ant', name: 'ant-launcher', version: '1.6.5'
+
     compile "org.jenkins-ci.main:jenkins-core:${jenkinsCore}"
     compile "org.jenkins-ci.main:remoting:${jenkinsRemoting}"
     compile "org.jenkins-ci.plugins:groovy:${jenkinsGroovyPlugin}@jar"
@@ -53,10 +56,9 @@ dependencies {
     // Jar needed for the test case using the JenkinsServer Client: https://github.com/jenkinsci/java-client-api/blob/master/README.md
     testCompile 'com.offbytwo.jenkins:jenkins-client:0.3.8'
 
-    // To fix the sisu/guice error, we must unzip/import the jar of the maven-installation jpi locally
-    testJenkinsJPI('org.jenkins-ci.main:maven-plugin:3.8')
-    testCompile fileTree(dir: 'target/maven-plugin/lib', include: ['*.jar'])
-    //testCompile fileTree(dir: '$buildDir/libs', include: ['*.jar'])
+    // To fix the sisu/guice error, we must unzip/import the hpi zip of the maven-installation plugin locally
+    testJenkinsJPI('org.jenkins-ci.main:maven-plugin:3.8@hpi')
+    testCompile fileTree(dir: 'target/maven-plugin', include: ['*.jar'])
 
     // Dependencies added post list calculation and needed for the Junit test case using maven Job DSL
     testCompile("org.antlr:antlr4-runtime:4.5")
@@ -132,27 +134,29 @@ dependencies {
      */
 }
 
-task getJarfromMavenPluginHPI(type: Copy) {
+task extractJarFromPlugin(type: Copy) {
+    def fileName = ""
+    def destFileName = ""
+    def String destinationDir = "$buildDir/tmp/"
     from configurations.testJenkinsJPI
-    def mapping = [:]
-    include '*.jar'
+    into new File(buildDir, 'tmp')
 
-    configurations.testJenkinsJPI.resolvedConfiguration.resolvedArtifacts.each {
-        mapping[it.file.name] = "${it.name}.${it.extension}"
-    }
-    into "target/maven-plugin/lib"
+    doFirst {
+        configurations.testJenkinsJPI.resolvedConfiguration.resolvedArtifacts.each {
+            fileName = it.file.name
+            destFileName = it.name
+            new File(destinationDir, '$fileName')
+            println "File : $fileName"
 
-    /*
-        from(zipTree("src/resources/thirdPartyResources.zip")) {
-        include "libs/**"
-        eachFile { fcd ->
-            fcd.relativePath = new RelativePath(true, fcd.relativePath.segments.drop(1))
+            ant.unzip(src: "$destinationDir/$fileName", dest: "$destinationDir/$destFileName-extracted", overwrite: "true")
+            copy {
+                from new File("$destinationDir/$destFileName-extracted", 'WEB-INF/lib')
+                into "target/$destFileName"
+            }
         }
-        includeEmptyDirs = false
     }
-    into "$buildDir/resources"
-    */
 }
+
 
 task resolveTestPlugins(type: Copy) {
     from configurations.testPlugins
@@ -177,10 +181,8 @@ task resolveTestPlugins(type: Copy) {
 test {
     testLogging.showStandardStreams = true
 
-    println "Build dir : $buildDir"
-
     dependsOn tasks.resolveTestPlugins
-    dependsOn tasks.getJarfromMavenPluginHPI
+    dependsOn tasks.extractJarFromPlugin
 
     inputs.files sourceSets.jobs.groovy.srcDirs
 }
