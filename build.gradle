@@ -145,7 +145,8 @@ task extractJarFromPlugin(type: Copy) {
         configurations.testJenkinsJPI.resolvedConfiguration.resolvedArtifacts.each {
             fileName = it.file.name
             pluginDestinationFolder = it.name
-            println "File name with extension: $fileName, Destination folder: $buildTempDir/$pluginDestinationFolder"
+            println "File name with extension: $fileName"
+            println "Destination folder of the plugin: $buildTempDir/$pluginDestinationFolder"
         }
     }
 
@@ -157,8 +158,6 @@ task extractJarFromPlugin(type: Copy) {
             into "target/$pluginDestinationFolder"
         }
     }
-
-
 }
 
 
