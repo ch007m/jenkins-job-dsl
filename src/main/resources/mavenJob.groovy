@@ -28,6 +28,11 @@ mavenJob('mvn-spring-boot-rest-http') {
             }
         }
     }
+
+    preBuildSteps {
+        shell("echo 'say hello to the maven job'")
+    }
+
     rootPOM 'pom.xml'
     goals 'clean install'
 }
