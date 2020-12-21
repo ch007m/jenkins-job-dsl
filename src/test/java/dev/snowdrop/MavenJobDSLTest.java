@@ -1,10 +1,10 @@
 package dev.snowdrop;
 
 import hudson.tasks.Maven;
-import org.junit.Rule;
-import org.jvnet.hudson.test.*;
 import hudson.maven.MavenModuleSet;
 import hudson.maven.MavenModuleSetBuild;
+import org.junit.Rule;
+import org.jvnet.hudson.test.*;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
