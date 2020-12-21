@@ -41,9 +41,11 @@ dependencies {
 
     compile "org.jenkins-ci.main:jenkins-core:${jenkinsCore}"
     compile "org.jenkins-ci.main:remoting:${jenkinsRemoting}"
-    compile "org.jenkins-ci.plugins:groovy:${jenkinsGroovyPlugin}@jar"
+
     compile "javax.servlet:javax.servlet-api:3.1.0"
     compile("org.jenkins-ci.plugins:job-dsl-core:1.77@jar")
+
+    testCompile "org.jenkins-ci.plugins:groovy:${jenkinsGroovyPlugin}@jar"
 
     testCompile("org.jenkins-ci.main:jenkins-war:${jenkinsCore}")
     testCompile("org.jenkins-ci.main:jenkins-test-harness:${jenkinsTestHarness}")
@@ -102,6 +104,17 @@ dependencies {
     testPlugins 'org.jenkins-ci.plugins:display-url-api:2.3.4'
     testPlugins 'org.jenkins-ci.plugins:git-client:3.5.1'
     testPlugins 'org.jenkins-ci.plugins:git:4.5.0'
+    /* !! Adding this plugin is raising many errors
+      java.lang.ClassNotFoundException: com.cloudbees.hudson.plugins.folder.AbstractFolderPropertyDescriptor
+      Failed to load: Jenkins Git plugin (4.5.0)
+      Failed to load: Git Parameter Plug-In (0.9.13)
+      due certainly to
+      Caused: java.lang.NoClassDefFoundError: com/cloudbees/hudson/plugins/folder/
+
+      testPlugins 'org.jenkins-ci.plugins:global-variable-string-parameter:1.2'
+     */
+
+    testPlugins 'org.jenkins-ci.plugins:groovy:2.3'
     testPlugins 'org.jenkins-ci.plugins:jackson2-api:2.12.0'
     testPlugins 'org.jenkins-ci.plugins:javadoc:1.6'
     testPlugins 'org.jenkins-ci.plugins:jdk-tool:1.4'
