@@ -16,12 +16,10 @@ try {
     workspace = env['MAVEN_PROJECT'];
 }
 
-println "WKS: $workspace";
-
 /*
- * Backup the pom.xml file
+ * Restore the pom.xml file
  */
-println "Backup pom.xml file"
+println "Restore pom.xml file"
 File pomfile = new File("$workspace/pom.xml");
 File pomBackupFile = new File("$workspace/pom.xml.bk");
-Files.copy(pomfile.toPath(), pomBackupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+Files.copy(pomBackupFile.toPath(), pomfile.toPath(), StandardCopyOption.REPLACE_EXISTING);

@@ -53,7 +53,8 @@ public class MavenCheckBOMJobDSLTest {
     public void copyGroovyFile() {
         String[] groovyFiles = {
                 "backupPOM.groovy",
-                "removeDependencyManagementTags.groovy"
+                "removeDependencyManagementTags.groovy",
+                "restorePOM.groovy"
         };
 
         // Create under the temp jenkins directory, the workspace of the job
