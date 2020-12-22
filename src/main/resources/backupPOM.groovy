@@ -36,7 +36,7 @@ println "List files within the Workspace of the job"
 /*
  * Remove the <dependencyManagement>, </dependencyManagement> tags
  */
-pomFileText = Files.readString(Paths.get(pomfile.toURI()));
+String pomFileText = Files.readString(Paths.get(pomfile.toURI()));
 pomFileText.replaceFirst("<dependencyManagement>","")
 pomFileText.replaceFirst("</dependencyManagement>","")
 //println("Pom modified : " + pomFileText)
