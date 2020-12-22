@@ -50,7 +50,8 @@ public class MavenCheckBOMJobDSLTest {
         // Create under the temp jenkins directory, the wokspace of the job
         File root = j.jenkins.root;
         File wksJobDir = new File(root.getAbsolutePath() + "/workspace/" + seedJobName);
-        wksJobDir.mkdir();
+        wksJobDir.mkdirs();
+
         // Create destination file
         File groovyWksFile = new File(wksJobDir.getAbsolutePath() + "/backupPOM.groovy");
 
