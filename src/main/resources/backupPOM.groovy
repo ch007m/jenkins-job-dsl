@@ -9,8 +9,6 @@ EnvVars envVars = build.getEnvironment(listener);
 def workspace = envVars.get('WORKSPACE')
 println "WKS: $workspace"
 println "Backup pom.xml file"
-//"cp $workspace/pom.xml $workspace/pom.xml.bk".execute().text
-
 def file = new File("$workspace/pom.xml")
 def newFile = new File("$workspace/pom.xml.bk")
 Files.copy(file.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
