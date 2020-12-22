@@ -1,22 +1,20 @@
 package dev.snowdrop;
 
+import hudson.FilePath;
 import hudson.maven.MavenModuleSet;
 import hudson.maven.MavenModuleSetBuild;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
-import hudson.plugins.groovy.Groovy;
 import hudson.plugins.groovy.GroovyInstallation;
 import hudson.tasks.Maven;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.ToolInstallations;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,23 +29,28 @@ public class MavenCheckBOMJobDSLTest {
     @Rule
     public JenkinsRule j = new JenkinsRule();
 
-    @Test
-    public void useMavenDSLGroovyFileAsJob() throws Exception {
-        String seedJobName = "maven-seed-job";
+    String seedJobName = "maven-seed-job";
+
+    @Before
+    // Install Groovy to the Jenkins Global Configuration Tools as it is needed by the mavenJob
+    // As no utility class exists to fetch groovy, then we will deploy it from a local resource zip file
+    public void setUpGroovy() throws Exception {
+        FilePath home = j.jenkins.getRootPath();
+        home.unzipFrom(MavenCheckBOMJobDSLTest.class.getResourceAsStream("/groovy-binary-3.0.7.zip"));
+        j.jenkins.getDescriptorByType(GroovyInstallation.DescriptorImpl.class).setInstallations(new GroovyInstallation("groovy-3.0.7", home.child("groovy-3.0.7").getRemote(), null));
+    }
+
+    @Before
+    public void setupMaven() throws Exception {
         // Add maven to the Jenkins Global Configuration Tools as it is needed by the mavenJob
         Maven.MavenInstallation mvn = ToolInstallations.configureDefaultMaven("apache-maven-3.6.3", Maven.MavenInstallation.MAVEN_30);
         Maven.MavenInstallation m3 = new Maven.MavenInstallation("apache-maven-3.6.3", mvn.getHome(), JenkinsRule.NO_PROPERTIES);
         j.getInstance().getDescriptorByType(Maven.DescriptorImpl.class).setInstallations(m3);
+    }
 
-        // Add Groovy to the Jenkins Global Configuration Tools as it is needed by the mavenJob
-        // systemGroovyCommand - child
-        // groovyCommand - master
-        GroovyInstallation groovy = new GroovyInstallation("groovy3","",null);
-        j.getInstance().getDescriptorByType(Groovy.DescriptorImpl.class).setInstallations(groovy);
-
-        FreeStyleProject job = j.createFreeStyleProject(seedJobName);
-
-        // Create under the temp jenkins directory, the wokspace of the job
+    @Before
+    public void copyGroovyFile() throws IOException {
+        // Create under the temp jenkins directory, the workspace of the job
         File root = j.jenkins.root;
         File wksJobDir = new File(root.getAbsolutePath() + "/workspace/" + seedJobName);
         wksJobDir.mkdirs();
@@ -59,6 +62,12 @@ public class MavenCheckBOMJobDSLTest {
         InputStream is = getClass().getResourceAsStream("/backupPOM.groovy");
         Path dest = Paths.get(groovyWksFile.getAbsolutePath());
         Files.copy(is, dest, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    @Test
+    public void useMavenDSLGroovyFileAsJob() throws Exception {
+
+        FreeStyleProject job = j.createFreeStyleProject(seedJobName);
 
         // Setup the ExecuteDslScripts to load the content of the DSL groovy script = mavenJob.groovy
         ExecuteDslScripts e = new ExecuteDslScripts();
