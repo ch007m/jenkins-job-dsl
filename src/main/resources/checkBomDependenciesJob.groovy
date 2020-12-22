@@ -78,17 +78,9 @@ mavenJob('check-bom-dependencies') {
     }
 
     preBuildSteps {
-            systemGroovyCommand '''\
-              import jenkins.model.Jenkins
-              import static groovy.io.FileType.*
-              import hudson.EnvVars
-              
-              def jenkins = Jenkins.getInstanceOrNull()
-              EnvVars envVars = build.getEnvironment(listener);
-              
-              def workspace = envVars.get('WORKSPACE')
-              println "WKS: $workspace"
-              '''.stripIndent()
+            groovyCommand(readFileFromWorkspace('backupPOM.groovy')) {
+                groovyInstallation('groovy3')
+              }
     }
 
     rootPOM 'pom.xml'

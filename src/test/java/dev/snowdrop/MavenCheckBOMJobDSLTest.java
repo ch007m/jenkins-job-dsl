@@ -14,7 +14,13 @@ import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.ToolInstallations;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -27,6 +33,7 @@ public class MavenCheckBOMJobDSLTest {
 
     @Test
     public void useMavenDSLGroovyFileAsJob() throws Exception {
+        String seedJobName = "maven-seed-job";
         // Add maven to the Jenkins Global Configuration Tools as it is needed by the mavenJob
         Maven.MavenInstallation mvn = ToolInstallations.configureDefaultMaven("apache-maven-3.6.3", Maven.MavenInstallation.MAVEN_30);
         Maven.MavenInstallation m3 = new Maven.MavenInstallation("apache-maven-3.6.3", mvn.getHome(), JenkinsRule.NO_PROPERTIES);
@@ -38,10 +45,22 @@ public class MavenCheckBOMJobDSLTest {
         GroovyInstallation groovy = new GroovyInstallation("groovy3","",null);
         j.getInstance().getDescriptorByType(Groovy.DescriptorImpl.class).setInstallations(groovy);
 
-        FreeStyleProject job = j.createFreeStyleProject("maven-seed-job");
+        FreeStyleProject job = j.createFreeStyleProject(seedJobName);
+
+        // Create under the temp jenkins directory, the wokspace of the job
+        File root = j.jenkins.root;
+        File wksJobDir = new File(root.getAbsolutePath() + "/workspace/" + seedJobName);
+        wksJobDir.mkdir();
+        // Create destination file
+        File groovyWksFile = new File(wksJobDir.getAbsolutePath() + "/backupPOM.groovy");
+
+        // Copy the needed groovy file from local to the job workspace
+        InputStream is = getClass().getResourceAsStream("/backupPOM.groovy");
+        Path dest = Paths.get(groovyWksFile.getAbsolutePath());
+        Files.copy(is, dest, StandardCopyOption.REPLACE_EXISTING);
+
         // Setup the ExecuteDslScripts to load the content of the DSL groovy script = mavenJob.groovy
         ExecuteDslScripts e = new ExecuteDslScripts();
-        //e.setTargets("mavenJob.groovy");
         String dslScript = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/checkBomDependenciesJob.groovy")))
                 .lines().collect(Collectors.joining("\n"));
         e.setScriptText(dslScript);
