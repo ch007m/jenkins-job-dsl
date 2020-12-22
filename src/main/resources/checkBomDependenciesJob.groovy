@@ -83,7 +83,7 @@ mavenJob('check-bom-dependencies') {
     }
 
     rootPOM 'pom.xml'
-    goals '-B dependency:tree'
+    goals 'dependency:tree'
 
     postBuildSteps {
         systemGroovyCommand(readFileFromWorkspace('restorePOM.groovy'))
