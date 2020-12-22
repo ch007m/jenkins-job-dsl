@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -49,24 +50,34 @@ public class MavenCheckBOMJobDSLTest {
     }
 
     @Before
-    public void copyGroovyFile() throws IOException {
+    public void copyGroovyFile() {
+        String[] groovyFiles = {
+                "backupPOM.groovy",
+                "removeDependencyManagementTags.groovy"
+        };
+
         // Create under the temp jenkins directory, the workspace of the job
         File root = j.jenkins.root;
         File wksJobDir = new File(root.getAbsolutePath() + "/workspace/" + seedJobName);
         wksJobDir.mkdirs();
 
-        // Create destination file
-        File groovyWksFile = new File(wksJobDir.getAbsolutePath() + "/backupPOM.groovy");
+        // Create the destination file
+        Arrays.stream(groovyFiles).forEach((f) -> {
+            File groovyWksFile = new File(wksJobDir.getAbsolutePath() + "/" + f);
 
-        // Copy the needed groovy file from local to the job workspace
-        InputStream is = getClass().getResourceAsStream("/backupPOM.groovy");
-        Path dest = Paths.get(groovyWksFile.getAbsolutePath());
-        Files.copy(is, dest, StandardCopyOption.REPLACE_EXISTING);
+            // Copy the needed groovy file from local to the job workspace
+            InputStream is = getClass().getResourceAsStream("/" + f);
+            Path dest = Paths.get(groovyWksFile.getAbsolutePath());
+            try {
+                Files.copy(is, dest, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Test
     public void useMavenDSLGroovyFileAsJob() throws Exception {
-
         FreeStyleProject job = j.createFreeStyleProject(seedJobName);
 
         // Setup the ExecuteDslScripts to load the content of the DSL groovy script = mavenJob.groovy
