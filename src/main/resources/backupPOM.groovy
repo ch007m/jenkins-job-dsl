@@ -23,8 +23,8 @@ println "WKS: $workspace"
  * Backup the pom.xml file
  */
 println "Backup pom.xml file"
-def pomfile = new File("$workspace/pom.xml")
-def pomBackupFile = new File("$workspace/pom.xml.bk")
+File pomfile = new File("$workspace/pom.xml")
+File pomBackupFile = new File("$workspace/pom.xml.bk")
 Files.copy(pomfile.toPath(), pomBackupFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
 
 /*
@@ -37,8 +37,8 @@ println "List files within the Workspace of the job"
  * Remove the <dependencyManagement>, </dependencyManagement> tags
  */
 String pomFileText = Files.readString(Paths.get(pomfile.toURI()));
-pomFileText.replaceFirst("<dependencyManagement>","")
-pomFileText.replaceFirst("</dependencyManagement>","")
+pomFileText = pomFileText.replaceFirst("<dependencyManagement>","")
+pomFileText = pomFileText.replaceFirst("</dependencyManagement>","")
 //println("Pom modified : " + pomFileText)
 
 pomfile.write(pomFileText)
