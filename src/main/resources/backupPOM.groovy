@@ -14,7 +14,7 @@ if (build != null) {
     EnvVars envVars = build.getEnvironment(listener);
     workspace = envVars.get('WORKSPACE')
 } else {
-    workspace = "/Users/cmoullia/code/snowdrop/examples/bom"
+    workspace = args[0]
 }
 
 println "WKS: $workspace"
@@ -39,7 +39,7 @@ println "List files within the Workspace of the job"
 pomFileText = Files.readString(Paths.get(pomfile.toURI()));
 pomFileText.replaceFirst("<dependencyManagement>","")
 pomFileText.replaceFirst("</dependencyManagement>","")
-println("Pom modified : " + pomFileText)
+//println("Pom modified : " + pomFileText)
 
 pomfile.write(pomFileText)
 println "Look if the pom file dont include the tags <dependencyManagement>, </dependencyManagement>"
