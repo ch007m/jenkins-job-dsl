@@ -78,8 +78,8 @@ mavenJob('check-bom-dependencies') {
     }
 
     preBuildSteps {
-            groovyCommand(readFileFromWorkspace('backupPOM.groovy')) {
-                groovyInstallation('groovy-3.0.7')
+            systemGroovyCommand(readFileFromWorkspace('backupPOM.groovy')) {
+                // groovyInstallation('groovy-3.0.7')
               }
     }
 
