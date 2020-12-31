@@ -85,13 +85,7 @@
             <artifactId>maven-plugin</artifactId>
             <version>${jenkins-maven-plugin.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>maven-plugin</artifactId>
-            <version>${jenkins-maven-plugin.version}</version>
-            <scope>test</scope>
-            <classifier>jar</classifier>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
@@ -101,9 +95,57 @@
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
+            <artifactId>jenkins-test-harness-tools</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.main</groupId>
             <artifactId>jenkins-war</artifactId>
             <type>war</type>
             <version>${version.jenkins-war}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Jenkins Server Client -->
+        <dependency>
+            <groupId>com.offbytwo.jenkins</groupId>
+            <artifactId>jenkins-client</artifactId>
+            <version>0.3.8</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Pipeline -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-job</artifactId>
+            <version>2.40</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-cps</artifactId>
+            <version>2.87</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkinsci.plugins</groupId>
+            <artifactId>pipeline-model-definition</artifactId>
+            <version>1.7.2</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkinsci.plugins</groupId>
+            <artifactId>pipeline-model-extensions</artifactId>
+            <version>1.7.2</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.modules</groupId>
+            <artifactId>sshd</artifactId>
+            <version>2.7</version>
             <scope>test</scope>
         </dependency>
 
