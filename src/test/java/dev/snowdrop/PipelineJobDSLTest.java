@@ -42,10 +42,12 @@ public class PipelineJobDSLTest {
         workflowJob.setDefinition(flow);
         WorkflowRun result = workflowJob.scheduleBuild2(0).get();
 
+        j.assertBuildStatusSuccess(result);
+        j.assertLogContains("Started", result);
+
         if (result.toString() != "SUCCESS") {
             ArrayList LogResult = (ArrayList) result.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         }
-        j.assertLogContains("Started", result);
     }
 }
