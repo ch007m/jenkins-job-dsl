@@ -128,6 +128,20 @@
             <type>jar</type>
             <scope>test</scope>
         </dependency>
+<!--        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-durable-task-step</artifactId>
+            <version>2.37</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>durable-task</artifactId>
+            <version>1.35</version>
+            <type>hpi</type>
+            <scope>test</scope>
+        </dependency>-->
         <dependency>
             <groupId>org.jenkinsci.plugins</groupId>
             <artifactId>pipeline-model-definition</artifactId>

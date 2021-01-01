@@ -6,10 +6,13 @@ import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.recipes.WithPlugin;
 
 import java.util.ArrayList;
 
+
 public class PipelineJobDSLTest {
+
     @Rule
     public JenkinsRule j = new JenkinsRule();
 
@@ -20,6 +23,7 @@ public class PipelineJobDSLTest {
             "        stage('Build') {\n" +
             "            steps {\n" +
             "                echo 'Building..'\n" +
+            "                sh 'mvn --version'\n" +
             "            }\n" +
             "        }\n" +
             "        stage('Test') {\n" +
@@ -35,6 +39,7 @@ public class PipelineJobDSLTest {
             "    }\n" +
             "}\n";
 
+    @WithPlugin({"durable-task-1.35.hpi"})
     @Test
     public void useSimpleDSLGroovyFileAsJob() throws Exception {
         CpsFlowDefinition flow = new CpsFlowDefinition(script,false);
