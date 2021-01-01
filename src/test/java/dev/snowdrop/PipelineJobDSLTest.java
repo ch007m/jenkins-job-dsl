@@ -20,20 +20,20 @@ public class PipelineJobDSLTest {
             "    agent any\n" +
             "\n" +
             "     stages {\n" +
-            "        stage('Build') {\n" +
+            "        stage('Prepare') {\n" +
             "            steps {\n" +
-            "                echo 'Building..'\n" +
+            "                echo 'Preparing ...'\n" +
             "                sh 'mvn --version'\n" +
             "            }\n" +
             "        }\n" +
-            "        stage('Test') {\n" +
+            "        stage('Build') {\n" +
             "            steps {\n" +
-            "                echo 'Testing..'\n" +
+            "                echo 'Building ...'\n" +
             "            }\n" +
             "        }\n" +
             "        stage('Deploy') {\n" +
             "            steps {\n" +
-            "                echo 'Deploying....'\n" +
+            "                echo 'Deploying ...'\n" +
             "            }\n" +
             "        }\n" +
             "    }\n" +
