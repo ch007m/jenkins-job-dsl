@@ -11,7 +11,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building spring Boot BOM'
-                sh 'mvn -B -DskipTests clean package'
+                sh 'mvn -B dependency:tree'
             }
         }
         stage('Example Test') {
