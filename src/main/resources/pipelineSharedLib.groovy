@@ -1,7 +1,10 @@
 @org.jenkinsci.plugins.workflow.libs.Library('mytools')
 
 import org.mytools.Tools
-Tools tools = new Tools(this)
+Tools t = new Tools(this)
+
+import org.mytools.Messaging
+Messaging m = new Messaging();
 
 pipeline {
     agent any
@@ -9,7 +12,8 @@ pipeline {
         stage('test') {
             steps {
                 script {
-                    tools.myEcho('Do a test')
+                    t.myEcho('Do a test')
+                    m.sayHelloTo('Charles')
                 }
             }
         }
