@@ -205,6 +205,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-cps-global-lib</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jenkins-ci.modules</groupId>
             <artifactId>sshd</artifactId>
             <scope>test</scope>
