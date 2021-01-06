@@ -35,7 +35,7 @@ assertEquals("SUCCESS",b2.getResult().toString());
 ```
 
 **Important**: If the `Groovy DSL syntax` of the script(s) loaded by the `FreeStyle project` is not correct, if some plugins or dependencies are missing, then errors will be raised. This is
-why having Junit testis very helpful :-)
+why having Junit test is very helpful :-)
 
 **Remark**: Instead of loading the groovy script from a local project, git could be used to fetch from a repository the syntax of the jobs.
 
