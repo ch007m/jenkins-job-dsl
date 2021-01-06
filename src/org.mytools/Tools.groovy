@@ -1,4 +1,4 @@
-package main.groovy.org.mytools
+package org.mytools
 
 class Tools implements Serializable {
     private static final long serialVersionUID
