@@ -1,34 +1,21 @@
-## Jenkins MavenJob
+## Jenkins Project to test Jobs
+
+The purpose of this project is to setup the needed environment in order to test/check/qualify
+`FreeStyle Project`, `Job` or `Pipeline` DSL where the business logic has been developed using `Groovy scripts`.
+
+All the Junit test classes include a `@Rule` annotation to instantiate the `JenkinsRule.class`. This class is responsible to
+install locally a Jenkins Server (from a war archive) as declared within the pom.
+
+All the needed `hpi or jpi` plugins (e.g. maven-plugin, pipeline, ...) will be deployed using the maven `hpi` plugin and goal `resolve-test-dependencies`.
+They will be deployed under the folder `target/test-classes/test-dependencies`. The different versions of the plugins are resolved from the `io.jenkins.tools.bom/bom-2.263.x` bom file.
 
 ### Prerequisite
 
-- Have gradle 6.7.1 installed and groovy 2.5.12
-- JDK 8 !!  
-- Run the following script in the Script Console of a Jenkins instance to generate
-the above testPlugins list.
-```
-Jenkins.instance.pluginManager.plugins
-  .findAll { !(it.shortName in ['job-dsl', 'structs']) }
-  .collect { "testPlugins '${it.manifest.mainAttributes.getValue("Group-Id")}:${it.shortName}:${it.version}'" }
-  .sort()
-  .each { println it }
-```
-and testCompile dependencies
-```
-Jenkins.instance.pluginManager.plugins
-  .findAll { !(it.shortName in ['job-dsl', 'structs']) }
-  .collect { "testCompile '${it.manifest.mainAttributes.getValue("Group-Id")}:${it.shortName}:${it.version}@jar'" }
-  .sort()
-  .each { println it }
-```
-**Remark**: TODO. Not all the `testCompile` deps are needed within the list populated. To be checked
+- JDK 11 is needed
 
-### HowTo test
+### How to test
 
-This project has been designed to test a `Maven Job DSL` using a Junit java class designed using as `@Rule` a `Jenkinsrule
-
-To test the `MavenJob`, execute the following gradle command:
+To test the different jobs created (simple, maven, pipeline, ...), execute the following maven command:
 ```
-gradle test --tests MavenJobDSLTest
+mvn clean test
 ```
-and next view the report populated under the folder `build/reports/tests/test/index.html`

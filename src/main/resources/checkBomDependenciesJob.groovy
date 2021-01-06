@@ -97,8 +97,9 @@ mavenJob('check-bom-dependencies') {
 
     postBuildSteps {
         systemGroovyCommand(readFileFromWorkspace('restorePOM.groovy'))
+        /* Using a VAR/PARAMETER does not work - see issue: https://issues.jenkins.io/browse/JENKINS-64515
         systemGroovyCommand(script) {
-            classpath('$SHARED_JAR_PATH')
-        }
+            classpath($SHARED_JAR_PATH)
+        }*/
     }
 }

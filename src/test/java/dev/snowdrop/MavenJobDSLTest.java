@@ -1,15 +1,16 @@
 package dev.snowdrop;
 
-import hudson.tasks.Maven;
 import hudson.maven.MavenModuleSet;
 import hudson.maven.MavenModuleSetBuild;
-import org.junit.Rule;
-import org.jvnet.hudson.test.*;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
+import hudson.tasks.Maven;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.ToolInstallations;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -20,11 +21,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MavenJobDSLTest {
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+    @Rule public JenkinsRule j = new JenkinsRule();
+    private ArrayList<String> LogResult;
+
+    @BeforeClass
+    public static void init() {
+        System.setProperty("jenkins.test.noSpaceInTmpDirs", "true");
+    }
 
     @Test
     public void useMavenDSLGroovyFileAsJob() throws Exception {
+
         // Add maven to the Jenkins Global Configuration Tools as it is needed by the mavenJob
         Maven.MavenInstallation mvn = ToolInstallations.configureDefaultMaven("apache-maven-3.6.3", Maven.MavenInstallation.MAVEN_30);
         Maven.MavenInstallation m3 = new Maven.MavenInstallation("apache-maven-3.6.3", mvn.getHome(), JenkinsRule.NO_PROPERTIES);
@@ -47,12 +54,12 @@ public class MavenJobDSLTest {
         assertEquals(1, b.number);
         assertEquals("#1", b.getDisplayName());
         if (b.getResult().toString() != "SUCCESS") {
-            ArrayList LogResult = (ArrayList) b.getLog(200);
+            LogResult = (ArrayList<String>) b.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         }
 
         // Check if the FreeStyleProject build reported that it generated the job: say-hello-world
-        ArrayList LogResult = (ArrayList) b.getLog(100);
+        LogResult = (ArrayList<String>) b.getLog(100);
         //LogResult.forEach((s) -> System.out.println(s));
         assertTrue(b.getLog(100).stream().anyMatch(str -> str.contains("GeneratedJob{name='mvn-spring-boot-rest-http'")));
 
@@ -63,11 +70,11 @@ public class MavenJobDSLTest {
         assertEquals(1, b2.number);
         assertEquals("#1", b2.getDisplayName());
         if (b2.getResult().toString() != "SUCCESS") {
-            LogResult = (ArrayList) b2.getLog(200);
+            LogResult = (ArrayList<String>) b2.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         } else {
             System.out.println("Job build succeeded !");
-            LogResult = (ArrayList) b2.getLog(200);
+            LogResult = (ArrayList<String>) b2.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         }
     }
