@@ -21,7 +21,7 @@ public class PipelineJobDSLTest {
 
     @Before
     public void fetchPipelineGroovy() {
-        pipelineScript = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/pipelinegitMaven.groovy")))
+        pipelineScript = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/pipelineGitMaven.groovy")))
                 .lines().collect(Collectors.joining("\n"));
     }
 
