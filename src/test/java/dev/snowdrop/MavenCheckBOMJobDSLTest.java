@@ -9,16 +9,22 @@ import hudson.plugins.groovy.GroovyInstallation;
 import hudson.tasks.Maven;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.ToolInstallations;
 
 import java.io.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -27,18 +33,46 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MavenCheckBOMJobDSLTest {
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+    @Rule public JenkinsRule j = new JenkinsRule();
+    private ArrayList<String> LogResult;
+    private String seedJobName = "maven-seed-job";
+    private static String GROOVY_BINARY_ZIP_URL = "https://bintray.com/artifact/download/groovy/maven/apache-groovy-binary-3.0.7.zip";
+    private static String GROOVY_BINARY_FILENAME = "groovy-binary-3.0.7.zip";
+    private static String GROOVY_JENKINS_NAME = "groovy-3.0.7";
 
-    String seedJobName = "maven-seed-job";
+    // Download the Groovy Binary Zip as it needed by jenkins to run the Groovy script job
+    @BeforeClass
+    public static void init() throws IOException, InterruptedException {
+        HttpClient httpClient = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                              .GET()
+                              .uri(URI.create(GROOVY_BINARY_ZIP_URL))
+                              .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
+                              .build();
+        HttpResponse<Path> response = httpClient.send(request, HttpResponse.BodyHandlers.ofFile(Paths.get("target/test-classes/" + GROOVY_BINARY_FILENAME)));
+    }
+
+    @BeforeClass
+    public static void setupProperty() {
+        System.setProperty("jenkins.test.noSpaceInTmpDirs", "true");
+    }
 
     @Before
     // Install Groovy to the Jenkins Global Configuration Tools as it is needed by the mavenJob
     // As no utility class exists to fetch groovy, then we will deploy it from a local resource zip file
     public void setUpGroovy() throws Exception {
         FilePath home = j.jenkins.getRootPath();
-        home.unzipFrom(MavenCheckBOMJobDSLTest.class.getResourceAsStream("/groovy-binary-3.0.7.zip"));
-        j.jenkins.getDescriptorByType(GroovyInstallation.DescriptorImpl.class).setInstallations(new GroovyInstallation("groovy-3.0.7", home.child("groovy-3.0.7").getRemote(), null));
+        home.unzipFrom(MavenCheckBOMJobDSLTest.class.getResourceAsStream("/" + GROOVY_BINARY_FILENAME));
+        j.jenkins.getDescriptorByType(GroovyInstallation.DescriptorImpl.class)
+                 .setInstallations(new GroovyInstallation(
+                                    GROOVY_JENKINS_NAME,
+                                    home.child(GROOVY_JENKINS_NAME).getRemote(),
+                          null));
     }
 
     @Before
@@ -95,12 +129,12 @@ public class MavenCheckBOMJobDSLTest {
         assertEquals(1, b.number);
         assertEquals("#1", b.getDisplayName());
         if (b.getResult().toString() != "SUCCESS") {
-            ArrayList LogResult = (ArrayList) b.getLog(200);
+            LogResult = (ArrayList<String>) b.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         }
 
         // Check if the FreeStyleProject build reported that it generated the job: say-hello-world
-        ArrayList LogResult = (ArrayList) b.getLog(100);
+        LogResult = (ArrayList<String>) b.getLog(100);
         //LogResult.forEach((s) -> System.out.println(s));
         assertTrue(b.getLog(100).stream().anyMatch(str -> str.contains("GeneratedJob{name='check-bom-dependencies'")));
 
@@ -111,11 +145,11 @@ public class MavenCheckBOMJobDSLTest {
         assertEquals(1, b2.number);
         assertEquals("#1", b2.getDisplayName());
         if (b2.getResult().toString() != "SUCCESS") {
-            LogResult = (ArrayList) b2.getLog(200);
+            LogResult = (ArrayList<String>) b2.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         } else {
             System.out.println("Job build succeeded !");
-            LogResult = (ArrayList) b2.getLog(200);
+            LogResult = (ArrayList<String>) b2.getLog(200);
             LogResult.forEach((s) -> System.out.println(s));
         }
     }

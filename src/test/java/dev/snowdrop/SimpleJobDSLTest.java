@@ -1,7 +1,5 @@
 package dev.snowdrop;
 
-import hudson.maven.MavenModuleSet;
-import hudson.maven.MavenModuleSetBuild;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
@@ -18,8 +16,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class SimpleJobDSLTest {
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+
+    @Rule public JenkinsRule j = new JenkinsRule();
+    private ArrayList<String> LogResult;
 
     @Test
     public void useSimpleDSLGroovyFileAsJob() throws Exception {
@@ -27,7 +26,6 @@ public class SimpleJobDSLTest {
 
         // Setup the ExecuteDslScripts to load the content of the DSL groovy script = mavenJob.groovy
         ExecuteDslScripts e = new ExecuteDslScripts();
-        //e.setTargets("mavenJob.groovy");
         String dslScript = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/simpleJob.groovy")))
                 .lines().collect(Collectors.joining("\n"));
         e.setScriptText(dslScript);
@@ -40,12 +38,12 @@ public class SimpleJobDSLTest {
         assertEquals(1, b.number);
         assertEquals("#1", b.getDisplayName());
         if (b.getResult().toString() != "SUCCESS") {
-            ArrayList LogResult = (ArrayList) b.getLog(100);
+            LogResult = (ArrayList<String>) b.getLog(100);
             LogResult.forEach((s) -> System.out.println(s));
         }
 
         // Check if the FreeStyleProject build reported that it generated the job: say-hello-world
-        ArrayList LogResult = (ArrayList) b.getLog(100);
+        LogResult = (ArrayList<String>) b.getLog(100);
         LogResult.forEach((s) -> System.out.println(s));
 
         assertTrue(b.getLog(100).stream().anyMatch(str -> str.contains("GeneratedJob{name='hello-world'")));

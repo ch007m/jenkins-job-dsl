@@ -9,109 +9,218 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <version.jenkins>2.271</version.jenkins>
-        <version.jenkins-war>2.271</version.jenkins-war>
+        <jenkins-bom.version>18</jenkins-bom.version>
+        <jenkins.version>2.271</jenkins.version>
+        <jenkins-git.version>4.5.0</jenkins-git.version>
+        <jenkins-kubernetes.version>1.25.2</jenkins-kubernetes.version>
+        <jenkins-remoting.version>4.3</jenkins-remoting.version>
+        <jenkins-test-harness.version>2.71</jenkins-test-harness.version>
+        <jenkins-test-harness-tools.version>2.2</jenkins-test-harness-tools.version>
+        <jenkins-client.version>0.3.8</jenkins-client.version>
+        <jenkins-job-dsl.version>1.77</jenkins-job-dsl.version>
 
-        <version.jenkins-job-dsl>1.77</version.jenkins-job-dsl>
-        <version.jenkins-kubernetes>1.25.2</version.jenkins-kubernetes>
-        <version.jenkins-git>4.5.0</version.jenkins-git>
-        <version.jenkins-groovy>2.3</version.jenkins-groovy>
-        <version.jenkins-remoting>4.3</version.jenkins-remoting>
-        <jenkins-maven-plugin.version>3.8</jenkins-maven-plugin.version>
+        <!-- jenkins plugins -->
+        <maven-plugin.version>3.8</maven-plugin.version>
+        <groovy-plugin.version>2.3</groovy-plugin.version>
+        <jackson2-api-plugin.version>2.11.3</jackson2-api-plugin.version>
+        <git-parameter.version>0.9.13</git-parameter.version>
 
-        <version.groovy>2.5.9</version.groovy>
+        <!-- NOT NEEDED ANYMORE as we import the Jenkins Plugin BOM as DependencyManagement
+        <workflow-job-plugin.version>2.40</workflow-job-plugin.version>
+        <workflow-cps-plugin.version>2.87</workflow-cps-plugin.version>
+        <pipeline-model-definition-plugin.version>1.7.2</pipeline-model-definition-plugin.version>
+        <pipeline-model-extension-plugin.version>1.7.2</pipeline-model-extension-plugin.version>
+        <workflow-support.version>3.7</workflow-support.version>
+        <matrix-project.version>1.18</matrix-project.version>
+        -->
 
+        <!-- JDK version -->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>11</java.version>
+
+        <!-- Maven plugins -->
+        <maven-compiler-plugin>3.8.1</maven-compiler-plugin>
+        <maven-hpi-plugin>3.17</maven-hpi-plugin>
+
+        <!-- Logging -->
+        <slf4j.version>2.0.0-alpha1</slf4j.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jenkins-ci.main</groupId>
+                <artifactId>jenkins-bom</artifactId>
+                <version>${jenkins.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jenkins.tools.bom</groupId>
+                <artifactId>bom-2.263.x</artifactId>
+                <version>${jenkins-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <version>${version.groovy}</version>
+            <artifactId>groovy-all</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
             <artifactId>jenkins-core</artifactId>
-            <version>${version.jenkins}</version>
+            <version>${jenkins.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
             <artifactId>remoting</artifactId>
-            <version>${version.jenkins-remoting}</version>
+            <version>${jenkins-remoting.version}</version>
         </dependency>
 
+        <!-- Jenkins Server Client -->
         <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>git</artifactId>
-            <version>${version.jenkins-git}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>groovy</artifactId>
-            <type>jar</type>
-            <version>${version.jenkins-groovy}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.csanchez.jenkins.plugins</groupId>
-            <artifactId>kubernetes</artifactId>
-            <version>${version.jenkins-kubernetes}</version>
+            <groupId>com.offbytwo.jenkins</groupId>
+            <artifactId>jenkins-client</artifactId>
+            <version>${jenkins-client.version}</version>
+            <scope>test</scope>
         </dependency>
 
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>job-dsl</artifactId>
-            <version>${version.jenkins-job-dsl}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>job-dsl-core</artifactId>
-            <version>${version.jenkins-job-dsl}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>script-security</artifactId>
-            <version>1.75</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>maven-plugin</artifactId>
-            <version>${jenkins-maven-plugin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>maven-plugin</artifactId>
-            <version>${jenkins-maven-plugin.version}</version>
-            <scope>test</scope>
-            <classifier>jar</classifier>
-        </dependency>
+        <!-- Testing & Plugins -->
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
             <artifactId>jenkins-test-harness</artifactId>
-            <version>2.71</version>
+            <version>${jenkins-test-harness.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.main</groupId>
+            <artifactId>jenkins-test-harness-tools</artifactId>
+            <version>${jenkins-test-harness-tools.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
             <artifactId>jenkins-war</artifactId>
+            <version>${jenkins.version}</version>
             <type>war</type>
-            <version>${version.jenkins-war}</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- logging dependencies -->
+        <!-- Job DSL -->
+        <!--
+        <dependency>
+            <groupId>org.csanchez.jenkins.plugins</groupId>
+            <artifactId>kubernetes</artifactId>
+            <version>${jenkins-kubernetes.version}</version>
+            <scope>test</scope>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>job-dsl</artifactId>
+            <version>${jenkins-job-dsl.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>job-dsl-core</artifactId>
+            <version>${jenkins-job-dsl.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Maven plugin -->
+        <dependency>
+            <groupId>org.jenkins-ci.main</groupId>
+            <artifactId>maven-plugin</artifactId>
+            <version>${maven-plugin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>groovy</artifactId>
+            <version>${groovy-plugin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>jackson2-api</artifactId>
+            <version>${jackson2-api-plugin.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Pipeline Plugin -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-job</artifactId>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-cps</artifactId>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-support</artifactId>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>matrix-project</artifactId>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>git</artifactId>
+            <version>${jenkins-git.version}</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.tools</groupId>
+            <artifactId>git-parameter</artifactId>
+            <version>${git-parameter.version}</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkinsci.plugins</groupId>
+            <artifactId>pipeline-model-definition</artifactId>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkinsci.plugins</groupId>
+            <artifactId>pipeline-model-extensions</artifactId>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.modules</groupId>
+            <artifactId>sshd</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Logging dependencies -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>2.0.0-alpha1</version>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -121,7 +230,26 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${maven-compiler-plugin}</version>
+                <configuration>
+                    <release>11</release>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jenkins-ci.tools</groupId>
+                <artifactId>maven-hpi-plugin</artifactId>
+                <version>${maven-hpi-plugin}</version>
+                <executions>
+                    <execution>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>resolve-test-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -138,6 +266,10 @@
     </repositories>
 
     <pluginRepositories>
+        <pluginRepository>
+            <id>maven-central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </pluginRepository>
         <pluginRepository>
             <id>jenkins-releases</id>
             <url>http://repo.jenkins-ci.org/releases/</url>

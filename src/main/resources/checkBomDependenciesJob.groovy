@@ -66,6 +66,9 @@ mavenJob('check-bom-dependencies') {
                         'the current SNAPSHOT version will be used with the ' +
                         '"-SNAPSHOT" suffix removed (example: if the current version ' +
                         'is "1.0-SNAPSHOT", the release version will be "1.0").')
+
+        stringParam('SHARED_JAR_PATH', 'file:////Users/cmoullia/temp/demo/lib/build/libs/lib-0.1.0.jar',
+                'Path where the shared lib is available n the jenkins instance')
     }
 
     scm {
@@ -85,7 +88,18 @@ mavenJob('check-bom-dependencies') {
     rootPOM 'pom.xml'
     goals 'dependency:tree'
 
+    String script = '''\
+           import dev.snowdrop.common.Utility 
+           Utility utility = new Utility()
+           println "Use shared lib and say hello: Charles"
+           println utility.sayHello('Charles')
+        '''.stripIndent()
+
     postBuildSteps {
         systemGroovyCommand(readFileFromWorkspace('restorePOM.groovy'))
+        /* Using a VAR/PARAMETER does not work - see issue: https://issues.jenkins.io/browse/JENKINS-64515
+        systemGroovyCommand(script) {
+            classpath($SHARED_JAR_PATH)
+        }*/
     }
 }
