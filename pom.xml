@@ -81,6 +81,10 @@
             <artifactId>remoting</artifactId>
             <version>${jenkins-remoting.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-cps-global-lib</artifactId>
+        </dependency>
 
         <!-- Jenkins Server Client -->
         <dependency>
@@ -202,11 +206,6 @@
             <groupId>org.jenkinsci.plugins</groupId>
             <artifactId>pipeline-model-extensions</artifactId>
             <type>jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins.workflow</groupId>
-            <artifactId>workflow-cps-global-lib</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
