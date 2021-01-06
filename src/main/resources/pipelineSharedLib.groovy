@@ -3,9 +3,6 @@
 import org.mytools.Tools
 Tools t = new Tools(this)
 
-import org.mytools.Messaging
-Messaging m = new Messaging();
-
 pipeline {
     agent any
     stages {
@@ -13,7 +10,6 @@ pipeline {
             steps {
                 script {
                     t.myEcho('Do a test')
-                    m.sayHelloTo('Charles')
                 }
             }
         }
