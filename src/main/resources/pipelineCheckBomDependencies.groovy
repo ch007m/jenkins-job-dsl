@@ -1,4 +1,4 @@
-@Library('snowdrop-lib') _
+@Library('snowdrop-lib@0.1') _
 
 // Global variables can be only set using the @Field pattern
 import groovy.transform.Field
@@ -6,11 +6,6 @@ import groovy.transform.Field
 
 pipeline {
     agent any
-
-    //ansiColor('xterm') {
-    //  echo "TERM=${env.TERM}"
-    //}
-    //sh "printenv"
 
     environment {
         PIPELINE_LOG_LEVEL = 'INFO'
