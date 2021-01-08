@@ -41,6 +41,9 @@ pipeline {
 
                 script {
                     def status = gitStatus()
+                    // TODO: Define as parameter the message as the message returned is different between the git tool installed !!
+                    // TODO: For older version (e.g: 1.8.3.1), it is "nothing to commit, working directory clean"
+                    // TODO: For recent version (e.g: 2.7.0),  it is "nothing to commit, working tree clean"
                     if (status.contains("nothing to commit, working tree clean")) {
                         log(level: 'WARN', text: "No Git difference :-)")
                     } else {
