@@ -37,7 +37,6 @@ pipeline {
 
         stage('Check if we have git diff') {
             steps {
-                mavenBuild(dependencyTree: true, compile: false)
                 restorePomFile(ext: '.bk', remove: true)
 
                 script {
