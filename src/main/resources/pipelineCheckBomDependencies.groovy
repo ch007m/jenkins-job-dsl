@@ -46,7 +46,7 @@ pipeline {
                 restorePomFile(ext: '.bk', remove: true)
 
                 script {
-                    def status = gitstatus()
+                    def status = gitStatus()
                     if (status.contains("nothing to commit, working tree clean")) {
                         log(level: 'WARN', text: "No Git difference :-)")
                     } else {
