@@ -1,4 +1,4 @@
-@Library('snowdrop-lib@0.1') _
+@Library('snowdrop-lib@0.2') _
 
 // Global variables can be only set using the @Field pattern
 import groovy.transform.Field
@@ -52,6 +52,12 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/report.txt', fingerprint: true
         }
     }
 }
