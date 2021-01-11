@@ -5,6 +5,7 @@ import groovy.transform.Field
 @Field def variable
 
 pipeline {
+    // TODO: Find a way to define the AGENT_LABEL according to the platform where it runs (e.g. agent { label 'maven' })
     agent any
 
     environment {
