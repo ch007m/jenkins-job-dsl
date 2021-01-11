@@ -15,29 +15,44 @@ pipeline {
         ansiColor('xterm')
     }
 
+    parameters {
+        string(name: 'baseDir', defaultValue: 'src', description: 'Directory to extract the git cloned prpject')
+    }
+
     stages {
+        stage('Parameters') {
+            steps {
+                echo params.baseDir
+                echo "--------"
+                echo "BaseDir parameter: ${params.baseDir}"
+            }
+        }
+
         stage('Checkout') {
             steps {
-                gitCheckout(repo: "https://github.com/snowdrop/spring-boot-bom.git", branch: "2.3.6.Alpha2")
+                gitCheckout(
+                        repo: "https://github.com/snowdrop/spring-boot-bom.git",
+                        branch: "2.3.6.Alpha2",
+                        baseDir: params.baseDir)
             }
         }
 
         stage('Clean up pom.xml file and backup it') {
             steps {
-                renamePomFile(ext: '.bk')
-                removeDependencyManagementTag()
+                renamePomFile(ext: '.bk', baseDir: params.baseDir)
+                removeDependencyManagementTag(baseDir: params.baseDir)
             }
         }
 
         stage('Check dependencies tree') {
             steps {
-                mavenBuild(dependencyTree: true, compile: false)
+                mavenBuild(dependencyTree: true, compile: false, baseDir: params.baseDir)
             }
         }
 
         stage('Check if we have git diff') {
             steps {
-                restorePomFile(ext: '.bk', remove: true)
+                restorePomFile(ext: '.bk', remove: true, baseDir: params.baseDir)
 
                 script {
                     def status = gitStatus()
@@ -57,7 +72,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: '**/report.txt', fingerprint: true
+            archiveArtifacts artifacts: 'report.txt', fingerprint: true
         }
     }
 }
