@@ -1,12 +1,20 @@
 @Library('snowdrop-lib@0.2') _
 
-// Global variables can be only set using the @Field pattern
-import groovy.transform.Field
-@Field def variable
+import org.jenkinsci.plugins.workflow.libs.Library
+def AGENT_LABEL = null
+
+node('master') {
+    stage('Determine platform and set agent'){
+        if (fileExists('/var/run/secrets/kubernetes.io')) {
+            AGENT_LABEL = "maven"
+        } else {
+            AGENT_LABEL = "any"
+        }
+    }
+}
 
 pipeline {
-    // TODO: Find a way to define the AGENT_LABEL according to the platform where it runs (e.g. agent { label 'maven' })
-    agent any
+    agent { label "${AGENT_LABEL}" }
 
     environment {
         PIPELINE_LOG_LEVEL = 'INFO'
@@ -17,7 +25,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'baseDir', defaultValue: 'src', description: 'Directory to extract the git cloned prpject')
+        string(name: 'baseDir', defaultValue: 'src', description: 'Directory to extract the git cloned project')
     }
 
     stages {
