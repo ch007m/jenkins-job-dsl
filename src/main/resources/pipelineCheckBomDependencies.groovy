@@ -1,6 +1,6 @@
 @Library('snowdrop-lib@0.2') _
-
 import org.jenkinsci.plugins.workflow.libs.Library
+
 def AGENT_LABEL = null
 
 node('master') {
