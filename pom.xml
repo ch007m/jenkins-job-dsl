@@ -115,15 +115,14 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Job DSL -->
-        <!--
+        <!-- Kubernetes DSL -->
         <dependency>
             <groupId>org.csanchez.jenkins.plugins</groupId>
             <artifactId>kubernetes</artifactId>
             <version>${jenkins-kubernetes.version}</version>
-            <scope>test</scope>
         </dependency>
-        -->
+
+        <!-- Job DSL -->
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>job-dsl</artifactId>
